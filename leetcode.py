@@ -38,10 +38,39 @@ Only one valid answer exists.
 
 Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?
 '''
-    def twoSum(self, num, target):
+    def twoSum(self, nums, target):
         dict = {} # for keeping value and index
-        for i, num in enumerate(num): # i index of the current number, num value at that index
-            complement = target - num # compute the number we need to find
-            if complement in dict : # if this complement is found in dict, then the solution if found
-                return [dict[complement], i]
+        for i, num in enumerate(nums): # i index of the current number, num value at that index
+            c = target - num # compute the number we need to find
+            if c in dict : # if this complement is found in dict, then the solution if found
+                return [dict[c], i]
             dict[num] = i
+
+# Media Sorted Arrays
+
+    def findMedianSortedArrays(self, nums1, nums2):
+        # make sur that nums1 will be the smaller array
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+        len_1, len_2 = len(nums1), len(nums2)
+        l, h = 0, len_1
+        
+        while l <= h:
+            i = (l + h) // 2 # partition in nums1
+            j = (len_1 + len_2 + 1) // 2 - i #partition in nums2
+
+            nums1left = nums1[i - 1] if i > 0 else float('-inf')
+            nums1right = nums1[i] if i < len_1 else float('inf')
+
+            nums2left = nums2[j - 1] if j > 0 else float('-inf')
+            nums2right = nums2[j] if j < len_2 else float('inf')
+
+            if nums1left <= nums2right and nums2left <= nums1right :
+                if (len_1 + len_2) % 2 == 1:
+                    return max(nums1left, nums2left)
+                else:
+                    return(max(nums1left, nums2left) + min(nums1right, nums2right)) / 2
+            elif nums1left > nums2right:
+                h = i - 1
+            else:
+                l = i + 1
